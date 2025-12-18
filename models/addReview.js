@@ -14,7 +14,7 @@ exports.addReview = async (req, res) => {
     const db = admin.database();
     const zonesRef = db.ref("zones");
 
-    // 1️⃣ Check if zone already exists
+    //Check if zone already exists
     const snapshot = await zonesRef
       .orderByChild("areaName")
       .equalTo(areaName)
@@ -24,11 +24,11 @@ exports.addReview = async (req, res) => {
     let zone;
 
     if (snapshot.exists()) {
-      // ✅ Existing zone
+      //Existing zone
       zoneId = Object.keys(snapshot.val())[0];
       zone = snapshot.val()[zoneId];
     } else {
-      // 🆕 New zone → Get coordinates from Mapbox
+      // New zone → Get coordinates from Mapbox
       const mapboxToken = process.env.MAPBOX_TOKEN;
       const geo = await axios.get(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
@@ -58,23 +58,23 @@ exports.addReview = async (req, res) => {
       await newZoneRef.set(zone);
     }
 
-    // 2️⃣ Add new review
+    // Add new review
     const reviews = zone.reviews || [];
     reviews.push({
       userId: "anonymous",
       score,
     });
 
-    // 3️⃣ Calculate new average
+    //Calculate new average
     const total = reviews.reduce((sum, r) => sum + r.score, 0);
     const avg = total / reviews.length;
 
-    // 4️⃣ Decide color
+    // Decide color
     let color = "green";
     if (avg <= 3) color = "red";
     else if (avg <= 7) color = "yellow";
 
-    // 5️⃣ Update zone data
+    // Update zone data
     await db.ref(`zones/${zoneId}`).update({
       reviews,
       avgScore: avg,
