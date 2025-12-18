@@ -16,10 +16,8 @@ const admin = require("firebase-admin");
 let serviceAccount;
 
 if (process.env.FIREBASE_CONFIG) {
-  // Deployment (Render/Heroku) → use environment variable
   serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 } else {
-  // Local development → load from file
   serviceAccount = require("../serviceAccountKey.json");
 }
 
