@@ -41,7 +41,7 @@ exports.signin = async (req, res) => {
 
     try {
         const apiKey =
-            "AIzaSyDIjATYYpgV7_se32HqabxuL9gWxryudlc"; // <-- Replace this
+            "AIzaSyDIjATYYpgV7_se32HqabxuL9gWxryudlc";
 
         const response = await axios.post(
             `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
